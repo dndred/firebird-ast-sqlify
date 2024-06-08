@@ -3,8 +3,9 @@
   "module": "src/index.ts",
   "type": "module",
   "scripts": {
-    "fix": "eslint src/**/*.ts --fix && prettier . --write --cache",
+    "fix": "prettier . --write --cache && eslint src/**/*.ts --fix",
     "lint": "prettier . -l --cache && eslint src/**/*.ts",
+    "playground": "bun run src/playground.ts",
     "prepare": "husky"
   },
   "devDependencies": {
@@ -21,5 +22,9 @@
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "node-sql-parser": "^5.2.0",
+    "zod": "^3.23.8"
   }
 }
