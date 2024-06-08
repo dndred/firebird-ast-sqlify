@@ -58,6 +58,18 @@ describe('simple select', () => {
   })
 })
 
+describe('select with table alias', () => {
+  it('simple select with table alias', () => {
+    const sql = 'select c.id, c.colorname from colors as c'
+    expect(convertSqlToFirebird(sql).toLowerCase()).toBe(sql.toLowerCase())
+  })
+
+  it('simple select with table alias and where', () => {
+    const sql = 'select c.id, c.colorname from colors as c where c.id = 1'
+    expect(convertSqlToFirebird(sql).toLowerCase()).toBe(sql.toLowerCase())
+  })
+})
+
 describe('select with limit and offset', () => {
   it('select with limit', () => {
     const sql = `select id, colorname from colors limit 10`

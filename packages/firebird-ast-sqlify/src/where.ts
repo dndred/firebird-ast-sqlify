@@ -29,9 +29,9 @@ export const whereSchema: z.ZodType<Where> = baseBinaryExprSchema.extend({
   right: z.lazy(() => z.union([columnRefSchema, valueSchema, whereSchema])),
 })
 
-const BinaryExpressionSideSchema = z.union([columnRefSchema, valueSchema, whereSchema])
+const ExpressionSchema = z.union([columnRefSchema, valueSchema, whereSchema])
 
-type BinaryExpressionSide = z.infer<typeof BinaryExpressionSideSchema>
+type BinaryExpressionSide = z.infer<typeof ExpressionSchema>
 
 const sqlifyBinaryExpressionSide = (ast: BinaryExpressionSide): string => {
   switch (ast.type) {
