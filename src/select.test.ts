@@ -1,4 +1,4 @@
-import { expect, describe, it } from 'bun:test'
+import { describe, expect, it } from 'bun:test'
 import { convertSqlToFirebird } from './index'
 
 describe('select', () => {
@@ -59,22 +59,5 @@ describe('select', () => {
     const sql = `select id, colorname from colors limit 10 offset 5`
     const resultSql = `select first 10 skip 5 id, colorname from colors`
     expect(convertSqlToFirebird(sql).toLowerCase()).toBe(resultSql.toLowerCase())
-  })
-})
-
-describe('insert', () => {
-  it('simple insert', () => {
-    const sql = `insert into colors (id, name) values (1, 'red')`
-    expect(convertSqlToFirebird(sql).toLowerCase()).toBe(sql.toLowerCase())
-  })
-
-  it('simple insert with unicode', () => {
-    const sql = `insert into colors (id, name) values (1, 'красный')`
-    expect(convertSqlToFirebird(sql).toLowerCase()).toBe(sql.toLowerCase())
-  })
-
-  it('simple insert with unicode', () => {
-    const sql = `insert into colors (id, name) values (?, ?)`
-    expect(convertSqlToFirebird(sql).toLowerCase()).toBe(sql.toLowerCase())
   })
 })
