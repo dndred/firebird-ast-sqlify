@@ -1,0 +1,14 @@
+.github
+.yarn
+coverage
+.idea
+.editorconfig
+.eslintignore
+.eslintrc.json
+.prettierrc
+.yarnrc.yml
+jest.config.js
+*.test.ts
+*.test.d.ts
+*.test.js*
+*.test.d.ts
