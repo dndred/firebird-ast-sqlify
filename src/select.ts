@@ -1,6 +1,7 @@
 import { sqlifyWhere, whereSchema } from './where'
 import { z } from 'zod'
 import { columnRefSchema } from './columnRef'
+import { limitSchema, sqlifyLimit } from './limit'
 
 export const selectSchema = z.object({
   type: z.literal('select'),
@@ -17,6 +18,7 @@ export const selectSchema = z.object({
     }),
   ),
   where: whereSchema.nullable(),
+  limit: limitSchema.nullable(),
 })
 
 type Select = z.infer<typeof selectSchema>
@@ -25,5 +27,8 @@ export const sqlifySelect = (ast: Select) => {
   const columns = ast.columns.map((column) => column.expr.column).join(', ')
   const from = ast.from.map((f) => `${f.table}`).join(', ')
   const where = ast.where ? `where ${sqlifyWhere(ast.where)}` : ''
-  return `SELECT ${columns} FROM ${from} ${where}`.trim()
+
+  const limit = ast.limit ? ` ${sqlifyLimit(ast.limit)}` : ''
+
+  return `SELECT${limit} ${columns} FROM ${from} ${where}`.trim()
 }
