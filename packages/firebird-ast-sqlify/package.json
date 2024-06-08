@@ -6,8 +6,7 @@
   "scripts": {
     "fix": "../../node_modules/.bin/prettier . --write --cache && eslint packages/firebird-ast-sqlify/src/**/*.ts --fix",
     "lint": "../../node_modules/.bin/prettier . -l --cache && eslint packages/firebird-ast-sqlify/src/**/*.ts",
-    "playground": "bun run src/playground.ts --watch",
-    "prepare": "../../node_modules/.bin/husky"
+    "playground": "bun run src/playground.ts --watch"
   },
   "devDependencies": {
     "@types/bun": "latest"
