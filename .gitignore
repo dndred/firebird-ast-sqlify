@@ -4,7 +4,7 @@ logs
 npm-debug.log*
 
 # Dependencies
-../../node_modules/
+node_modules
 
 # Coverage
 coverage
@@ -27,3 +27,4 @@ dist/
 
 # Misc
 .DS_Store
+.env

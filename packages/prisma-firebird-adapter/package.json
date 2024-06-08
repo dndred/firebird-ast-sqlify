@@ -1,0 +1,15 @@
+{
+  "name": "prisma-firebird-adapter",
+  "module": "src/index.ts",
+  "type": "module",
+  "version": "0.0.1",
+  "dependencies": {
+    "firebird-ast-sqlify": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

@@ -1,0 +1,2 @@
+publish:
+	bunx @morlay/bunpublish
