@@ -1,6 +1,5 @@
 import { z } from 'zod'
 import { valueSchema } from './value'
-import { describe, expect, it } from 'bun:test'
 import { exhaustiveCheck } from './utils'
 
 export const limitSchema = z.union([
@@ -14,7 +13,7 @@ export const limitSchema = z.union([
   }),
 ])
 
-type Limit = z.infer<typeof limitSchema>
+export type Limit = z.infer<typeof limitSchema>
 
 export const sqlifyLimit = (ast: Limit): string => {
   if (ast.seperator === '') {
@@ -25,49 +24,3 @@ export const sqlifyLimit = (ast: Limit): string => {
 
   return exhaustiveCheck(ast)
 }
-
-const limitExample: Limit = {
-  seperator: '',
-  value: [
-    {
-      type: 'number',
-      value: 10,
-    },
-  ],
-} as const
-
-const limitWithOffsetExample: Limit = {
-  seperator: 'offset',
-  value: [
-    {
-      type: 'number',
-      value: 10,
-    },
-    {
-      type: 'number',
-      value: 5,
-    },
-  ],
-} as const
-
-describe('limitSchema', () => {
-  it('should validate limit', () => {
-    const valid = limitSchema.safeParse(limitExample)
-    expect(valid.success).toBe(true)
-  })
-
-  it('should validate limit with offset', () => {
-    const valid = limitSchema.safeParse(limitWithOffsetExample)
-    expect(valid.success).toBe(true)
-  })
-})
-
-describe('sqlifyLimit', () => {
-  it('should convert limit', () => {
-    expect(sqlifyLimit(limitExample)).toBe('first 10')
-  })
-
-  it('should convert limit with offset', () => {
-    expect(sqlifyLimit(limitWithOffsetExample)).toBe('first 10 skip 5')
-  })
-})
