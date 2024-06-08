@@ -4,7 +4,9 @@
   "type": "module",
   "version": "0.0.1",
   "dependencies": {
-    "firebird-ast-sqlify": "workspace:*"
+    "@prisma/driver-adapter-utils": "^5.15.0",
+    "firebird-ast-sqlify": "workspace:*",
+    "node-firebird": "^1.1.8"
   },
   "devDependencies": {
     "@types/bun": "latest"

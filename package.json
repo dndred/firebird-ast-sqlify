@@ -2,6 +2,9 @@
   "name": "prisma-firebird",
   "private": true,
   "type": "module",
+  "scripts": {
+    "fix": "prettier . --write --cache && eslint packages --fix"
+  },
   "workspaces": [
     "packages/*"
   ],
