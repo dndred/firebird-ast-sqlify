@@ -1,3 +1,3 @@
-import {convertSqlToFirebird} from "firebird-ast-sqlify";
+import { convertSqlToFirebird } from "firebird-ast-sqlify";
 
-console.log(convertSqlToFirebird('select id, colorname from colors'))
+console.log(convertSqlToFirebird("select id, colorname from colors"));

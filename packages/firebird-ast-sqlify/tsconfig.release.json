@@ -3,10 +3,6 @@
   "compilerOptions": {
     "removeComments": true
   },
-  "include": [
-    "packages/firebird-ast-sqlify/src/**/*"
-  ],
-  "exclude": [
-    "packages/firebird-ast-sqlify/src/**/*.test.ts"
-  ]
+  "include": ["packages/firebird-ast-sqlify/src/**/*"],
+  "exclude": ["packages/firebird-ast-sqlify/src/**/*.test.ts"]
 }

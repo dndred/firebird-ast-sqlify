@@ -20,7 +20,5 @@
     "strictNullChecks": true,
     "declaration": true
   },
-  "include": [
-    "packages/firebird-ast-sqlify/src/**/*"
-  ]
+  "include": ["packages/firebird-ast-sqlify/src/**/*"]
 }
