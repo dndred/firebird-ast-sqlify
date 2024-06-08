@@ -1,4 +1,4 @@
-# firebird-ast-sqlify
+# prisma-firebird
 
 **Under development**
 
