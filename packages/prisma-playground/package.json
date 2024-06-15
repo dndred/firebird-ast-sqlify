@@ -1,0 +1,17 @@
+{
+  "name": "prisma-playground",
+  "module": "index.ts",
+  "type": "module",
+  "private": "true",
+  "dependencies": {
+    "@prisma/client": "^5.15.0",
+    "prisma": "^5.15.0",
+    "prisma-firebird-adapter": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
