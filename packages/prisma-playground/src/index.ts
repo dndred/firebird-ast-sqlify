@@ -8,8 +8,8 @@ const main = async () => {
     },
     where: {
       color: {
-        colorId: 10
-      }
+        colorId: 10,
+      },
     },
   })
   console.log(JSON.stringify(r, null, 2))

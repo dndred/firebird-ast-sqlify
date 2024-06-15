@@ -32,6 +32,16 @@ describe('simple select', () => {
     expect(convertSqlToFirebird(sql).toLowerCase()).toBe(sql.toLowerCase())
   })
 
+  it('simple select with where and IS NULL', () => {
+    const sql = 'select id, colorname from colors where id is NULL'
+    expect(convertSqlToFirebird(sql).toLowerCase()).toBe(sql.toLowerCase())
+  })
+
+  it('simple select with where and IS NOT NULL', () => {
+    const sql = 'select id, colorname from colors where id is NOT NULL'
+    expect(convertSqlToFirebird(sql).toLowerCase()).toBe(sql.toLowerCase())
+  })
+
   it('simple select with where string equal condition', () => {
     const sql = `select id, colorname from colors where colorname = 'red'`
     expect(convertSqlToFirebird(sql).toLowerCase()).toBe(sql.toLowerCase())

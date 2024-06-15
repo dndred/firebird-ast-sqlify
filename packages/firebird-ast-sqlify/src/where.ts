@@ -15,6 +15,8 @@ const baseBinaryExprSchema = z.object({
     z.literal('<='),
     z.literal('AND'),
     z.literal('OR'),
+    z.literal('IS'),
+    z.literal('IS NOT'),
   ]),
   parentheses: z.boolean().optional(),
 })
@@ -40,7 +42,7 @@ const sqlifyBinaryExpressionSide = (ast: BinaryExpressionSide): string => {
     case 'number':
     case 'single_quote_string':
     case 'origin':
-    case "null":
+    case 'null':
       return sqlifyValue(ast)
     case 'binary_expr':
       return sqlifyWhere(ast)
