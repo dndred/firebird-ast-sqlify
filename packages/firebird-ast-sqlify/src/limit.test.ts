@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import {getArgumentsCountInLimit, Limit, limitSchema, sqlifyLimit} from './limit'
+import { getArgumentsCountInLimit, Limit, limitSchema, sqlifyLimit } from './limit'
 
 const limitExample: Limit = {
   seperator: '',
@@ -25,30 +25,29 @@ const limitWithOffsetExample: Limit = {
   ],
 } as const
 
-
 const limitWithArgumentExample: Limit = {
-  "seperator": "",
-  "value": [
+  seperator: '',
+  value: [
     {
-      "type": "origin",
-      "value": "?"
-    }
-  ]
+      type: 'origin',
+      value: '?',
+    },
+  ],
 }
 
 const limitWithArgumentAndOffset: Limit = {
-    "seperator": "offset",
-    "value": [
-      {
-        "type": "origin",
-        "value": "?"
-      },
-      {
-        "type": "origin",
-        "value": "?"
-      }
-    ]
-  }
+  seperator: 'offset',
+  value: [
+    {
+      type: 'origin',
+      value: '?',
+    },
+    {
+      type: 'origin',
+      value: '?',
+    },
+  ],
+}
 
 describe('limitSchema', () => {
   it('should validate limit', () => {

@@ -124,67 +124,67 @@ const whereWithArgument: Where = {
 }
 
 const whereWithArgumentsOnBothSided: Where = {
-    "type": "binary_expr",
-    "operator": "=",
-    "left": {
-      "type": "origin",
-      "value": "?"
-    },
-    "right": {
-      "type": "origin",
-      "value": "?"
-    }
-  }
+  type: 'binary_expr',
+  operator: '=',
+  left: {
+    type: 'origin',
+    value: '?',
+  },
+  right: {
+    type: 'origin',
+    value: '?',
+  },
+}
 
 // where (id = ? or id = ?) and colorname <> ?
 const whereWithArgumentsOrAndAnd: Where = {
-    "type": "binary_expr",
-    "operator": "AND",
-    "left": {
-      "type": "binary_expr",
-      "operator": "OR",
-      "left": {
-        "type": "binary_expr",
-        "operator": "=",
-        "left": {
-          "type": "column_ref",
-          "table": null,
-          "column": "id"
-        },
-        "right": {
-          "type": "origin",
-          "value": "?"
-        }
+  type: 'binary_expr',
+  operator: 'AND',
+  left: {
+    type: 'binary_expr',
+    operator: 'OR',
+    left: {
+      type: 'binary_expr',
+      operator: '=',
+      left: {
+        type: 'column_ref',
+        table: null,
+        column: 'id',
       },
-      "right": {
-        "type": "binary_expr",
-        "operator": "=",
-        "left": {
-          "type": "column_ref",
-          "table": null,
-          "column": "id"
-        },
-        "right": {
-          "type": "origin",
-          "value": "?"
-        }
+      right: {
+        type: 'origin',
+        value: '?',
       },
-      "parentheses": true
     },
-    "right": {
-      "type": "binary_expr",
-      "operator": "<>",
-      "left": {
-        "type": "column_ref",
-        "table": null,
-        "column": "colorname"
+    right: {
+      type: 'binary_expr',
+      operator: '=',
+      left: {
+        type: 'column_ref',
+        table: null,
+        column: 'id',
       },
-      "right": {
-        "type": "origin",
-        "value": "?"
-      }
-    }
-  }
+      right: {
+        type: 'origin',
+        value: '?',
+      },
+    },
+    parentheses: true,
+  },
+  right: {
+    type: 'binary_expr',
+    operator: '<>',
+    left: {
+      type: 'column_ref',
+      table: null,
+      column: 'colorname',
+    },
+    right: {
+      type: 'origin',
+      value: '?',
+    },
+  },
+}
 
 describe('whereSchema', () => {
   it('should validate where', () => {
@@ -234,6 +234,4 @@ describe('get argument count from where', () => {
   it('with arguments and OR and AND', () => {
     expect(getArgumentsCountInWhere(whereWithArgumentsOrAndAnd)).toBe(3)
   })
-
-
 })

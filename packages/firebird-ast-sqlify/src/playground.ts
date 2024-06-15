@@ -2,8 +2,9 @@ import { Parser } from 'node-sql-parser'
 import { sqlify } from './index'
 import { astSchema } from './ast-schema'
 
-const sql =
-  'SELECT `mysql`.`colors`.`colorid`, `mysql`.`colors`.`colorname` FROM `mysql`.`colors` WHERE 1=1 LIMIT ? OFFSET ?'
+const sql = 'SELECT id, colorname FROM colors limit ? offset ?'
+// const args = [100, 10]
+
 const parser = new Parser()
 const ast = parser.astify(sql, {
   database: 'MySQL',

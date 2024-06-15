@@ -80,7 +80,8 @@ const getArgumentCountInBinaryExpressionSide = (ast: BinaryExpressionSide): numb
   }
 }
 
-export const getArgumentsCountInWhere = (ast: Where): number => {
+export const getArgumentsCountInWhere = (ast?: Where): number => {
+  if (!ast) return 0
   if (ast.type !== 'binary_expr') {
     return exhaustiveCheck(ast.type)
   }

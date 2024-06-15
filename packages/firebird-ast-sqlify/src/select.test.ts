@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { convertSqlToFirebird } from './index'
+import { convertSqlToFirebird } from './'
 
 describe('simple select', () => {
   it('simple select', () => {

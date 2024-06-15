@@ -16,7 +16,7 @@ import {
   pool,
   type Transaction as FirebirdTransaction,
 } from 'node-firebird'
-import { convertSqlToFirebird } from 'firebird-ast-sqlify'
+import { convertQueryToFirebird } from 'firebird-ast-sqlify'
 import type { FirebirdResultMeta } from './firebird-result-meta.ts'
 import type { FirebirdResult } from './firebird-result.ts'
 import { mapFirebirdTypeToPrisma } from './sql-types-map.ts'
@@ -33,18 +33,16 @@ export class FirebirdQueryable implements Queryable {
   async queryRaw({ sql, args }: Query): Promise<Result<ResultSet>> {
     console.log('queryRaw', sql, args)
 
-    const convertedSql = convertSqlToFirebird(sql)
+    const { sql: convertedSql, args: convertedArgs } = convertQueryToFirebird({ sql, args })
     console.log('Converted SQL', convertedSql)
+    console.log('Converted Args', convertedArgs)
     const db = await this.getDb()
 
     return new Promise((resolve) => {
       db.execute(
         convertedSql,
-        args,
+        convertedArgs,
         (queryError: unknown, rows: FirebirdResult, meta: FirebirdResultMeta) => {
-          console.log('meta', meta)
-          // console.log(JSON.stringify(result))
-
           if (queryError) {
             console.error('Error querying', queryError)
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment

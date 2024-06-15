@@ -25,7 +25,8 @@ export const sqlifyLimit = (ast: Limit): string => {
   return exhaustiveCheck(ast)
 }
 
-export const getArgumentsCountInLimit = (ast: Limit) : number => {
+export const getArgumentsCountInLimit = (ast?: Limit): number => {
+  if (!ast) return 0
   const inLimit = ast.value[0].value === '?' ? 1 : 0
   const inOffset = ast.seperator === 'offset' && ast.value[1]?.value === '?' ? 1 : 0
 
