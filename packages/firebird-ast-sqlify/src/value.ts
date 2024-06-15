@@ -14,6 +14,10 @@ export const valueSchema = z.union([
     type: z.literal('origin'),
     value: z.string(),
   }),
+    z.object({
+      type: z.literal('null'),
+      value: null
+    })
 ])
 
 export type Value = z.infer<typeof valueSchema>
@@ -26,6 +30,8 @@ export const sqlifyValue = (value: Value): string => {
       return `'${value.value}'`
     case 'origin':
       return value.value
+    case "null":
+      return 'NULL'
     default:
       return exhaustiveCheck(value)
   }

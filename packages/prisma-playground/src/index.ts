@@ -2,16 +2,15 @@ import { prisma } from './prisma.ts'
 
 const main = async () => {
   console.log('Hello, world!')
-  const r = await prisma.colors.findMany({
+  const r = await prisma.items.findMany({
     select: {
-      colorid: true,
-      colorname: true,
+      itemid: true,
     },
     where: {
-      colorid: 1358,
+      color: {
+        colorId: 10
+      }
     },
-    take: 10,
-    skip: 3,
   })
   console.log(JSON.stringify(r, null, 2))
 }

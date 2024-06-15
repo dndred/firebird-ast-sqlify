@@ -9,6 +9,18 @@ datasource db {
 }
 
 model colors {
-  colorid   Int    @id
+  colorId   Int     @id
   colorname String
+  items     items[]
+}
+
+model sizes {
+  sizeid   Int    @id
+  sizename String
+}
+
+model items {
+  itemid  Int    @id
+  colorId Int
+  color   colors @relation(fields: [colorId], references: [colorId], onDelete: Cascade)
 }

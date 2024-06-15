@@ -38,10 +38,9 @@ const sqlifyBinaryExpressionSide = (ast: BinaryExpressionSide): string => {
     case 'column_ref':
       return sqlifyColumnRef(ast)
     case 'number':
-      return sqlifyValue(ast)
     case 'single_quote_string':
-      return sqlifyValue(ast)
     case 'origin':
+    case "null":
       return sqlifyValue(ast)
     case 'binary_expr':
       return sqlifyWhere(ast)
@@ -66,10 +65,9 @@ export const sqlifyWhere = (ast: Where): string => {
 const getArgumentCountInBinaryExpressionSide = (ast: BinaryExpressionSide): number => {
   switch (ast.type) {
     case 'column_ref':
-      return 0
     case 'number':
-      return 0
     case 'single_quote_string':
+    case 'null':
       return 0
     case 'origin':
       return ast.value === '?' ? 1 : 0
