@@ -62,3 +62,31 @@ export const sqlifyWhere = (ast: Where): string => {
   }
   return s
 }
+
+const getArgumentCountInBinaryExpressionSide = (ast: BinaryExpressionSide): number => {
+  switch (ast.type) {
+    case 'column_ref':
+      return 0
+    case 'number':
+      return 0
+    case 'single_quote_string':
+      return 0
+    case 'origin':
+      return ast.value === '?' ? 1 : 0
+    case 'binary_expr':
+      return getArgumentsCountInWhere(ast)
+    default:
+      return exhaustiveCheck(ast)
+  }
+}
+
+export const getArgumentsCountInWhere = (ast: Where): number => {
+  if (ast.type !== 'binary_expr') {
+    return exhaustiveCheck(ast.type)
+  }
+
+  const left = getArgumentCountInBinaryExpressionSide(ast.left)
+  const right = getArgumentCountInBinaryExpressionSide(ast.right)
+
+  return left + right
+}
