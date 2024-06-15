@@ -130,3 +130,12 @@ describe('select with WHERE with AND and OR', () => {
     expect(convertSqlToFirebird(sql).toLowerCase()).toBe(sql.toLowerCase())
   })
 })
+
+describe('prisma specific formatting', () => {
+  it('prisma select with backticks_quote_string', () => {
+    const sql =
+      'SELECT `mysql`.`colors`.`colorid`, `mysql`.`colors`.`colorname` FROM `mysql`.`colors` WHERE 1=1 LIMIT ? OFFSET ?'
+    const resultSql = `SELECT first ? skip ? colors.colorid, colors.colorname FROM colors where 1 = 1`
+    expect(convertSqlToFirebird(sql).toLowerCase()).toBe(resultSql.toLowerCase())
+  })
+})
