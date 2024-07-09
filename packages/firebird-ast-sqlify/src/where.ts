@@ -51,7 +51,8 @@ const sqlifyBinaryExpressionSide = (ast: BinaryExpressionSide): string => {
   }
 }
 
-export const sqlifyWhere = (ast: Where): string => {
+export const sqlifyWhere = (ast?: Where): string => {
+  if (!ast) return ''
   if (ast.type !== 'binary_expr') {
     return exhaustiveCheck(ast.type)
   }

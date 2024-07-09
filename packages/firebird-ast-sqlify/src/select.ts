@@ -2,7 +2,7 @@ import { getArgumentsCountInWhere, sqlifyWhere, whereSchema } from './where'
 import { z } from 'zod'
 import { columnRefSchema } from './columnRef'
 import { getArgumentsCountInLimit, limitSchema, sqlifyLimit } from './limit'
-import { sqlifyTableName, tableNameSchema } from './table-name'
+import { sqlifyFrom, fromSchema } from './from'
 import { valueSchema } from './value'
 import { sqlifySelectColumn } from './selectColumn'
 
@@ -14,7 +14,7 @@ export const selectSchema = z.object({
       as: z.string().nullable(),
     }),
   ),
-  from: z.array(tableNameSchema),
+  from: z.array(fromSchema),
   where: whereSchema.nullable(),
   limit: limitSchema.nullable(),
 })
@@ -37,7 +37,7 @@ export const reorderSelectQueryArguments = (ast: Select, args: unknown[]): unkno
 
 export const sqlifySelect = (ast: Select) => {
   const columns = ast.columns.map(sqlifySelectColumn).join(', ')
-  const from = ast.from.map(sqlifyTableName).join(', ')
+  const from = ast.from.map(sqlifyFrom).join('\n')
   const where = ast.where ? `where ${sqlifyWhere(ast.where)}` : ''
   const limit = ast.limit ? ` ${sqlifyLimit(ast.limit)}` : ''
 
