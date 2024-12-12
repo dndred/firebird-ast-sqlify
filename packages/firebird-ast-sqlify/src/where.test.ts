@@ -284,6 +284,6 @@ describe('get argument count from where', () => {
   })
 
   it('with one argument in IN and one constant', () => {
-      expect(getArgumentsCountInWhere(whereWithArgumentsAndConstInIn)).toBe(1)
+    expect(getArgumentsCountInWhere(whereWithArgumentsAndConstInIn)).toBe(1)
   })
 })

@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "fix": "prettier . --write --cache && eslint packages --fix"
+    "fix": "prettier . --write --cache && eslint packages --fix",
+    "lint": "prettier . --check --cache && eslint packages"
   },
   "workspaces": [
     "packages/*"
