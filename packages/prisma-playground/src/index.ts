@@ -5,10 +5,17 @@ const main = async () => {
   const r = await prisma.items.findMany({
     select: {
       itemid: true,
+      priceOpt: true,
+      color: {
+        select: {
+          colorname: true,
+        },
+      },
     },
+    take: 2,
     where: {
       color: {
-        colorId: 10,
+        colorId: 20,
       },
     },
   })

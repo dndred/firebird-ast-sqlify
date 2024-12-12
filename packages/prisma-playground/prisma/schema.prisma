@@ -20,7 +20,8 @@ model sizes {
 }
 
 model items {
-  itemid  Int    @id
-  colorId Int
-  color   colors @relation(fields: [colorId], references: [colorId], onDelete: Cascade)
+  itemid   Int     @id
+  colorId  Int
+  priceOpt Decimal @map("priseOpt")
+  color    colors  @relation(fields: [colorId], references: [colorId], onDelete: Cascade)
 }

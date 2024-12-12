@@ -186,6 +186,50 @@ const whereWithArgumentsOrAndAnd: Where = {
   },
 }
 
+// WHERE colorId IN (?)
+const whereWithInExample: Where = {
+  type: 'binary_expr',
+  operator: 'IN',
+  left: {
+    type: 'column_ref',
+    table: null,
+    column: 'colorId',
+  },
+  right: {
+    type: 'expr_list',
+    value: [
+      {
+        type: 'origin',
+        value: '?',
+      },
+    ],
+  },
+}
+
+// WHERE colorId IN (?, 1)
+const whereWithArgumentsAndConstInIn: Where = {
+  type: 'binary_expr',
+  operator: 'IN',
+  left: {
+    type: 'column_ref',
+    table: null,
+    column: 'colorId',
+  },
+  right: {
+    type: 'expr_list',
+    value: [
+      {
+        type: 'origin',
+        value: '?',
+      },
+      {
+        type: 'number',
+        value: 1,
+      },
+    ],
+  },
+}
+
 describe('whereSchema', () => {
   it('should validate where', () => {
     const valid = whereSchema.safeParse(whereExample)
@@ -233,5 +277,13 @@ describe('get argument count from where', () => {
 
   it('with arguments and OR and AND', () => {
     expect(getArgumentsCountInWhere(whereWithArgumentsOrAndAnd)).toBe(3)
+  })
+
+  it('with one argument in IN', () => {
+    expect(getArgumentsCountInWhere(whereWithInExample)).toBe(1)
+  })
+
+  it('with one argument in IN and one constant', () => {
+      expect(getArgumentsCountInWhere(whereWithArgumentsAndConstInIn)).toBe(1)
   })
 })
