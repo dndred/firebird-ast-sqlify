@@ -7,7 +7,7 @@ import { astSchema } from './ast-schema'
 //   'SELECT `mysql`.`items`.`itemid` FROM `mysql`.`items`  WHERE (`j1`.`colorId` = ? AND (`j1`.`colorId` IS NOT NULL))'
 // const args = [10]
 
-const sql = 'SELECT id, colorname FROM colors'
+const sql = 'SELECT colorid from colors where colorid IN (1)'
 convertQueryToFirebird({ sql, args: [] })
 const parser = new Parser()
 const ast = parser.astify(sql, {

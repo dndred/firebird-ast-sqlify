@@ -6,7 +6,9 @@ import {
   expressionListSchema,
   expressionSchema,
   getArgumentCountInExpression,
+  getArgumentCountInExpressionList,
   sqlifyExpression,
+  sqlifyExpressionList,
 } from './expression'
 
 const baseBinaryExprSchema = z.object({
@@ -50,7 +52,7 @@ export const sqlifyBinaryExpressionSide = (ast: BinaryExpressionLeftSide | Binar
     case 'binary_expr':
       return sqlifyWhere(ast)
     case 'expr_list':
-      return ast.value.map((v) => sqlifyExpression(v)).join(', ')
+      return sqlifyExpressionList(ast)
     default:
       return sqlifyExpression(ast)
   }
@@ -77,9 +79,7 @@ const getArgumentCountInBinaryExpressionSide = (ast: BinaryExpressionLeftSide | 
     case 'binary_expr':
       return getArgumentsCountInWhere(ast)
     case 'expr_list':
-      return ast.value.reduce((acc, astElement) => {
-        return acc + getArgumentCountInBinaryExpressionSide(astElement)
-      }, 0)
+      return getArgumentCountInExpressionList(ast)
     default:
       return getArgumentCountInExpression(ast)
   }

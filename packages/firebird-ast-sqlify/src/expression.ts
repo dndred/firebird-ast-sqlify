@@ -32,6 +32,11 @@ export const sqlifyExpression = (ast: Expression): string => {
   }
 }
 
+export const sqlifyExpressionList = (ast: ExpressionList): string => {
+  const list = ast.value.map((v) => sqlifyExpression(v)).join(', ')
+  return `(${list})`
+}
+
 export const getArgumentCountInExpression = (ast: Expression): number => {
   switch (ast.type) {
     case 'column_ref':
@@ -51,4 +56,10 @@ export const getArgumentCountInExpression = (ast: Expression): number => {
     default:
       return exhaustiveCheck(ast)
   }
+}
+
+export const getArgumentCountInExpressionList = (ast: ExpressionList): number => {
+  return ast.value.reduce((acc, astElement) => {
+    return acc + getArgumentCountInExpression(astElement)
+  }, 0)
 }
