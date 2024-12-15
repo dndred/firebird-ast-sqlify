@@ -23,12 +23,14 @@ export const selectSchema = z.object({
 type Select = z.infer<typeof selectSchema>
 
 export const getArgumentsCountInSelect = (ast: Select): number => {
-  return getArgumentsCountInWhere(ast.where) + getArgumentsCountInLimit(ast.limit)
+  const inWhere = ast.where ? getArgumentsCountInWhere(ast.where) : 0
+  const inLimit = ast.limit ? getArgumentsCountInLimit(ast.limit) : 0
+  return inWhere + inLimit
 }
 
 export const reorderSelectQueryArguments = (ast: Select, args: unknown[]): unknown[] => {
-  const argumentsInWhere = getArgumentsCountInWhere(ast.where)
-  const argumentsInLimit = getArgumentsCountInLimit(ast.limit)
+  const argumentsInWhere = ast.where ? getArgumentsCountInWhere(ast.where) : 0
+  const argumentsInLimit = ast.limit ? getArgumentsCountInLimit(ast.limit) : 0
   if (!argumentsInLimit || !argumentsInWhere) return args
   const limitArguments = args.slice(args.length - argumentsInLimit)
   const whereArguments = args.slice(0, args.length - argumentsInLimit)

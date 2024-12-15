@@ -1,7 +1,13 @@
-import { exhaustiveCheck } from './utils'
-import { sqlifyValue, Value, valueSchema } from './value'
+import { Value, valueSchema } from './value'
 import { z } from 'zod'
-import { ColumnRef, columnRefSchema, sqlifyColumnRef } from './columnRef'
+import { ColumnRef, columnRefSchema } from './columnRef'
+import {
+  ExpressionList,
+  expressionListSchema,
+  expressionSchema,
+  getArgumentCountInExpression,
+  sqlifyExpression,
+} from './expression'
 
 const baseBinaryExprSchema = z.object({
   type: z.literal('binary_expr'),
@@ -22,13 +28,6 @@ const baseBinaryExprSchema = z.object({
   parentheses: z.boolean().optional(),
 })
 
-const expressionListSchema = z.object({
-  type: z.literal('expr_list'),
-  value: z.array(valueSchema),
-})
-
-type ExpressionList = z.infer<typeof expressionListSchema>
-
 export type Where = z.infer<typeof baseBinaryExprSchema> & {
   left: ColumnRef | Value | Where
   right: ColumnRef | Value | Where | ExpressionList
@@ -40,27 +39,20 @@ export const whereSchema: z.ZodType<Where> = baseBinaryExprSchema.extend({
   right: z.lazy(() => z.union([columnRefSchema, valueSchema, whereSchema, expressionListSchema])),
 })
 
-const ExpressionSchemaLeftSide = z.union([columnRefSchema, valueSchema, whereSchema])
+const ExpressionSchemaLeftSide = z.union([expressionSchema, whereSchema])
 type BinaryExpressionLeftSide = z.infer<typeof ExpressionSchemaLeftSide>
 
-const ExpressionSchemaRightSide = z.union([columnRefSchema, valueSchema, whereSchema, expressionListSchema])
+const ExpressionSchemaRightSide = z.union([expressionSchema, whereSchema, expressionListSchema])
 type BinaryExpressionRightSide = z.infer<typeof ExpressionSchemaRightSide>
 
 export const sqlifyBinaryExpressionSide = (ast: BinaryExpressionLeftSide | BinaryExpressionRightSide): string => {
   switch (ast.type) {
-    case 'column_ref':
-      return sqlifyColumnRef(ast)
-    case 'number':
-    case 'single_quote_string':
-    case 'origin':
-    case 'null':
-      return sqlifyValue(ast)
     case 'binary_expr':
       return sqlifyWhere(ast)
     case 'expr_list':
-      return ast.value.map((v) => sqlifyValue(v)).join(', ')
+      return ast.value.map((v) => sqlifyExpression(v)).join(', ')
     default:
-      return exhaustiveCheck(ast)
+      return sqlifyExpression(ast)
   }
 }
 
@@ -82,32 +74,18 @@ export const sqlifyWhere = (ast?: Where): string => {
 
 const getArgumentCountInBinaryExpressionSide = (ast: BinaryExpressionLeftSide | BinaryExpressionRightSide): number => {
   switch (ast.type) {
-    case 'column_ref':
-    case 'number':
-    case 'single_quote_string':
-    case 'null':
-      return 0
-    case 'origin':
-      return ast.value === '?' ? 1 : 0
     case 'binary_expr':
       return getArgumentsCountInWhere(ast)
-    case undefined:
-      return 0
     case 'expr_list':
       return ast.value.reduce((acc, astElement) => {
         return acc + getArgumentCountInBinaryExpressionSide(astElement)
       }, 0)
     default:
-      return exhaustiveCheck(ast)
+      return getArgumentCountInExpression(ast)
   }
 }
 
-export const getArgumentsCountInWhere = (ast?: Where): number => {
-  if (!ast) return 0
-  if (ast.type !== 'binary_expr') {
-    return exhaustiveCheck(ast.type)
-  }
-
+export const getArgumentsCountInWhere = (ast: Where): number => {
   const left = getArgumentCountInBinaryExpressionSide(ast.left)
   const right = getArgumentCountInBinaryExpressionSide(ast.right)
 
