@@ -8,20 +8,53 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model colors {
+model Colors {
   colorId   Int     @id
-  colorname String
-  items     items[]
+  colorName String
+  items     Items[]
 }
 
-model sizes {
-  sizeid   Int    @id
-  sizename String
+model Sizes {
+  sizeId   Int    @id
+  sizeName String
 }
 
-model items {
-  itemid   Int     @id
+model Items {
+  itemId   Int     @id
   colorId  Int
   priceOpt Decimal @map("priseOpt")
-  color    colors  @relation(fields: [colorId], references: [colorId], onDelete: Cascade)
+  color    Colors  @relation(fields: [colorId], references: [colorId], onDelete: Cascade)
+
+  rashod RashodItems[]
+}
+
+model Clients {
+  clientId   Int    @id
+  clientName String
+  fullName   String
+  email      String
+
+  rashodDocs RashodDocs[]
+}
+
+model RashodDocs {
+  numDoc   Int     @id
+  // date   DateTime
+  clientId Int
+  Clients  Clients @relation(fields: [clientId], references: [clientId])
+
+  items RashodItems @relation(fields: [numDoc], references: [numDoc])
+
+  @@map("RASHODDOC")
+}
+
+model RashodItems {
+  numDoc     Int          @id
+  itemId     Int
+  amount     Int          @map("COLVO")
+  price      Decimal      @map("PRISE")
+  RashodDocs RashodDocs[]
+  Items      Items        @relation(fields: [itemId], references: [itemId])
+
+  @@map("RASHOD")
 }

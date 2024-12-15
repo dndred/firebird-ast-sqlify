@@ -4,21 +4,38 @@ const main = async () => {
   console.log('Hello, world!')
   const r = await prisma.items.findMany({
     select: {
-      itemid: true,
+      itemId: true,
       priceOpt: true,
       color: {
         select: {
-          colorname: true,
+          colorName: true,
+        },
+      },
+      rashod: {
+        take: 2,
+        include: {
+          RashodDocs: {
+            include: {
+              Clients: true,
+            },
+          },
         },
       },
     },
-    take: 2,
+    take: 500,
     where: {
       color: {
-        colorId: 20,
+        colorName: 'Белый',
+      },
+      rashod: {
+        every: {
+          numDoc: {
+            gte: 0,
+          },
+        },
       },
     },
   })
-  console.log(JSON.stringify(r, null, 2))
+  console.log(r.filter((i) => i.rashod.length > 0))
 }
 await main()
