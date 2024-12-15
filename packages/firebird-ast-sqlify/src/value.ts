@@ -1,7 +1,7 @@
 import { exhaustiveCheck } from './utils'
 import { z } from 'zod'
 
-export const valueScalarSchema = z.union([
+export const valueSchema = z.union([
   z.object({
     type: z.literal('single_quote_string'),
     value: z.string(),
@@ -20,17 +20,9 @@ export const valueScalarSchema = z.union([
   }),
 ])
 
-export const valueListSchema = z.array(valueScalarSchema)
-
-export const valueSchema = z.union([valueScalarSchema, valueListSchema])
-
 export type Value = z.infer<typeof valueSchema>
 
 export const sqlifyValue = (value: Value): string => {
-  if ('length' in value) {
-    return `(${value.map(sqlifyValue).join(', ')})`
-  }
-
   switch (value.type) {
     case 'number':
       return value.value.toString()

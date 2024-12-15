@@ -1,5 +1,5 @@
 import { exhaustiveCheck } from './utils'
-import { sqlifyValue, Value, valueScalarSchema, valueSchema } from './value'
+import { sqlifyValue, Value, valueSchema } from './value'
 import { z } from 'zod'
 import { ColumnRef, columnRefSchema, sqlifyColumnRef } from './columnRef'
 
@@ -24,7 +24,7 @@ const baseBinaryExprSchema = z.object({
 
 const expressionListSchema = z.object({
   type: z.literal('expr_list'),
-  value: z.array(valueScalarSchema),
+  value: z.array(valueSchema),
 })
 
 type ExpressionList = z.infer<typeof expressionListSchema>
@@ -47,9 +47,6 @@ const ExpressionSchemaRightSide = z.union([columnRefSchema, valueSchema, whereSc
 type BinaryExpressionRightSide = z.infer<typeof ExpressionSchemaRightSide>
 
 export const sqlifyBinaryExpressionSide = (ast: BinaryExpressionLeftSide | BinaryExpressionRightSide): string => {
-  if ('length' in ast) {
-    return sqlifyValue(ast)
-  }
   switch (ast.type) {
     case 'column_ref':
       return sqlifyColumnRef(ast)
@@ -84,11 +81,6 @@ export const sqlifyWhere = (ast?: Where): string => {
 }
 
 const getArgumentCountInBinaryExpressionSide = (ast: BinaryExpressionLeftSide | BinaryExpressionRightSide): number => {
-  if ('length' in ast) {
-    return ast.reduce((acc, astElement) => {
-      return acc + getArgumentCountInBinaryExpressionSide(astElement)
-    }, 0)
-  }
   switch (ast.type) {
     case 'column_ref':
     case 'number':
@@ -99,10 +91,12 @@ const getArgumentCountInBinaryExpressionSide = (ast: BinaryExpressionLeftSide | 
       return ast.value === '?' ? 1 : 0
     case 'binary_expr':
       return getArgumentsCountInWhere(ast)
-    case 'expr_list':
-      return getArgumentCountInBinaryExpressionSide(ast.value)
     case undefined:
       return 0
+    case 'expr_list':
+      return ast.value.reduce((acc, astElement) => {
+        return acc + getArgumentCountInBinaryExpressionSide(astElement)
+      }, 0)
     default:
       return exhaustiveCheck(ast)
   }
