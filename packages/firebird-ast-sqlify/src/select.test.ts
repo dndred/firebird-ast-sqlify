@@ -149,3 +149,21 @@ describe('prisma specific formatting', () => {
     expect(convertSqlToFirebird(sql).toLowerCase()).toBe(resultSql.toLowerCase())
   })
 })
+
+describe('select with subquery', () => {
+  it('simple select with subquery', () => {
+    const sql = 'select id, colorname from colors where id in (select id from colors)'
+    expect(convertSqlToFirebird(sql).toLowerCase()).toEqual(sql.toLowerCase())
+  })
+
+  it('simple select with subquery and where', () => {
+    const sql = 'select id, colorname from colors where id in (select id from colors where id = 1)'
+    expect(convertSqlToFirebird(sql).toLowerCase()).toEqual(sql.toLowerCase())
+  })
+
+  it('simple select with subquery and where and limit', () => {
+    const sql = 'select id, colorname from colors where id in (select id from colors where id = 1) limit 10'
+    const resultSql = `select first 10 id, colorname from colors where id in (select id from colors where id = 1)`
+    expect(convertSqlToFirebird(sql).toLowerCase()).toEqual(resultSql.toLowerCase())
+  })
+})

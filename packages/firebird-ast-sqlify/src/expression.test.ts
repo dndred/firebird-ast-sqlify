@@ -41,9 +41,56 @@ const expressionListWithArgumentExample: ExpressionList = {
   ],
 }
 
+const expressionListWithSelectExample: ExpressionList = {
+  type: 'expr_list',
+  value: [
+    {
+      ast: {
+        type: 'select',
+        columns: [
+          {
+            expr: {
+              type: 'column_ref',
+              table: 'table2',
+              column: 'id',
+            },
+            as: null,
+          },
+        ],
+        from: [
+          {
+            db: null,
+            table: 'table2',
+            as: null,
+          },
+        ],
+        where: null,
+        limit: null,
+      },
+    },
+  ],
+}
+
 describe('should validate expressionList schema', () => {
   it('should validate expressionList (1)', () => {
     const valid = expressionListSchema.safeParse(expressionListExample)
+    expect(valid.success).toBe(true)
+  })
+
+  it('should validate expressionList (1, 2)', () => {
+    const valid = expressionListSchema.safeParse(expressionListTwoConstsExample)
+    expect(valid.success).toBe(true)
+  })
+
+  it("should validate expressionList (?, 'red')", () => {
+    const valid = expressionListSchema.safeParse(expressionListWithArgumentExample)
+    expect(valid.success).toBe(true)
+  })
+
+  it('should validate expressionList with select', () => {
+    const valid = expressionListSchema.safeParse(expressionListWithSelectExample)
+    console.log(valid.error)
+
     expect(valid.success).toBe(true)
   })
 })
@@ -59,5 +106,9 @@ describe('should sqlifyExpressionList', () => {
 
   it("should return (?, 'red')", () => {
     expect(sqlifyExpressionList(expressionListWithArgumentExample)).toBe("(?, 'red')")
+  })
+
+  it('should return (select table2.id from table2)', () => {
+    expect(sqlifyExpressionList(expressionListWithSelectExample)).toBe('(SELECT table2.id FROM table2)')
   })
 })

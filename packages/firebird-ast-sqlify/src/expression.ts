@@ -3,8 +3,11 @@ import { columnRefSchema, sqlifyColumnRef } from './columnRef'
 import { sqlifyValue, valueSchema } from './value'
 import { sqlFunctionSchema, sqlifyFunction } from './sqlFunction'
 import { exhaustiveCheck } from './utils'
+import { getArgumentsCountInSelect, selectSchema, sqlifySelect } from './select'
 
-export const expressionSchema = z.union([columnRefSchema, valueSchema, sqlFunctionSchema])
+const subquerySelectSchema = z.object({ ast: z.lazy(() => selectSchema) })
+
+export const expressionSchema = z.union([columnRefSchema, valueSchema, sqlFunctionSchema, subquerySelectSchema])
 
 export type Expression = z.infer<typeof expressionSchema>
 
@@ -16,6 +19,11 @@ export const expressionListSchema = z.object({
 export type ExpressionList = z.infer<typeof expressionListSchema>
 
 export const sqlifyExpression = (ast: Expression): string => {
+  if ('ast' in ast) {
+    return `${sqlifySelect(ast.ast)}`
+  }
+  if (!('type' in ast)) return ''
+
   switch (ast.type) {
     case 'column_ref':
       return sqlifyColumnRef(ast)
@@ -38,6 +46,11 @@ export const sqlifyExpressionList = (ast: ExpressionList): string => {
 }
 
 export const getArgumentCountInExpression = (ast: Expression): number => {
+  if ('ast' in ast) {
+    return getArgumentsCountInSelect(ast.ast)
+  }
+  if (!('type' in ast)) return 0
+
   switch (ast.type) {
     case 'column_ref':
     case 'number':
