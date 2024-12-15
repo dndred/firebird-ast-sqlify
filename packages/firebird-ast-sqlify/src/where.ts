@@ -46,7 +46,7 @@ type BinaryExpressionLeftSide = z.infer<typeof ExpressionSchemaLeftSide>
 const ExpressionSchemaRightSide = z.union([columnRefSchema, valueSchema, whereSchema, expressionListSchema])
 type BinaryExpressionRightSide = z.infer<typeof ExpressionSchemaRightSide>
 
-const sqlifyBinaryExpressionSide = (ast: BinaryExpressionLeftSide | BinaryExpressionRightSide): string => {
+export const sqlifyBinaryExpressionSide = (ast: BinaryExpressionLeftSide | BinaryExpressionRightSide): string => {
   if ('length' in ast) {
     return sqlifyValue(ast)
   }

@@ -7,7 +7,7 @@ import { astSchema } from './ast-schema'
 //   'SELECT `mysql`.`items`.`itemid` FROM `mysql`.`items`  WHERE (`j1`.`colorId` = ? AND (`j1`.`colorId` IS NOT NULL))'
 // const args = [10]
 
-const sql = 'SELECT colorId, colorname FROM colors WHERE colorId IN (?, 1)'
+const sql = 'SELECT round(colorId) FROM colors'
 const parser = new Parser()
 const ast = parser.astify(sql, {
   database: 'MySQL',

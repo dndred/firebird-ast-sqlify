@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "fix": "prettier . --write --cache && eslint packages --fix",
-    "lint": "prettier . --check --cache && eslint packages"
+    "lint": "prettier . --check --cache && eslint packages",
+    "playground": "bun run packages/firebird-ast-sqlify/src/playground.ts --watch"
   },
   "workspaces": [
     "packages/*"

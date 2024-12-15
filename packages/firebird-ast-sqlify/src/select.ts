@@ -5,12 +5,13 @@ import { getArgumentsCountInLimit, limitSchema, sqlifyLimit } from './limit'
 import { sqlifyFrom, fromSchema } from './from'
 import { valueSchema } from './value'
 import { sqlifySelectColumn } from './selectColumn'
+import { sqlFunctionSchema } from './sqlFunction'
 
 export const selectSchema = z.object({
   type: z.literal('select'),
   columns: z.array(
     z.object({
-      expr: z.union([columnRefSchema, valueSchema]),
+      expr: z.union([columnRefSchema, valueSchema, sqlFunctionSchema]),
       as: z.string().nullable(),
     }),
   ),

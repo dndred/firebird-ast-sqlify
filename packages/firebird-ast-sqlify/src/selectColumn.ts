@@ -2,24 +2,34 @@ import { z } from 'zod'
 import { columnRefSchema, sqlifyColumnRef } from './columnRef'
 import { sqlifyValue, valueSchema } from './value'
 import { exhaustiveCheck } from './utils'
+import { sqlFunctionSchema, sqlifyFunction } from './sqlFunction'
 
 export const selectColumnSchema = z.object({
-  expr: z.union([columnRefSchema, valueSchema]),
+  expr: z.union([columnRefSchema, valueSchema, sqlFunctionSchema]),
   as: z.string().nullable(),
 })
 
 export type SelectColumn = z.infer<typeof selectColumnSchema>
 
 const sqlifySelectColumnValue = (column: SelectColumn): string => {
-  switch (column.expr.type) {
+  const expr = column.expr
+  if (!('type' in expr)) {
+    return ''
+  }
+
+  switch (expr.type) {
     case 'column_ref':
-      return sqlifyColumnRef(column.expr)
+      return sqlifyColumnRef(expr)
     case 'number':
     case 'origin':
     case 'single_quote_string':
-      return sqlifyValue(column.expr)
+      return sqlifyValue(expr)
+    case 'function':
+      return sqlifyFunction(expr)
+    case 'null':
+      return ''
     default:
-      return exhaustiveCheck(column.expr)
+      return exhaustiveCheck(expr)
   }
 }
 
