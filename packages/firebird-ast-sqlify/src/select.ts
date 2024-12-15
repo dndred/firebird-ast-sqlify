@@ -6,6 +6,7 @@ import { sqlifyFrom, fromSchema } from './from'
 import { valueSchema } from './value'
 import { sqlifySelectColumn } from './selectColumn'
 import { sqlFunctionSchema } from './sqlFunction'
+import { orderBySchema, sqlifyOrderBy } from './orderBy'
 
 export const selectSchema = z.object({
   type: z.literal('select'),
@@ -18,6 +19,7 @@ export const selectSchema = z.object({
   from: z.array(fromSchema),
   where: whereSchema.nullable(),
   limit: limitSchema.nullable(),
+  orderby: orderBySchema.nullable(),
 })
 
 type Select = z.infer<typeof selectSchema>
@@ -43,6 +45,7 @@ export const sqlifySelect = (ast: Select) => {
   const from = ast.from.map(sqlifyFrom).join('\n')
   const where = ast.where ? `where ${sqlifyWhere(ast.where)}` : ''
   const limit = ast.limit ? ` ${sqlifyLimit(ast.limit)}` : ''
-
-  return `SELECT${limit} ${columns} FROM ${from} ${where}`.trim()
+  const orderBy = ast.orderby ? `ORDER BY ${sqlifyOrderBy(ast.orderby)}` : ''
+  const optionalClause = [where, orderBy].filter(Boolean).join(' ')
+  return `SELECT${limit} ${columns} FROM ${from} ${optionalClause}`.trim()
 }

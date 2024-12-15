@@ -35,6 +35,7 @@ export const convertQueryToFirebird = ({ sql, args }: ConvertQueryToFirebirdProp
     database: 'MySQL',
   })
   const parsedSchema = astSchema.parse(ast)
+
   switch (parsedSchema.type) {
     case 'select':
       return { sql: sqlifySelect(parsedSchema), args: reorderSelectQueryArguments(parsedSchema, args) }

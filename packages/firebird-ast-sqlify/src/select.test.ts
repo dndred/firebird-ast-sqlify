@@ -167,3 +167,24 @@ describe('select with subquery', () => {
     expect(convertSqlToFirebird(sql).toLowerCase()).toEqual(resultSql.toLowerCase())
   })
 })
+
+// SELECT id FROM table1 ORDER BY field1, field2 desc, field3 asc
+describe('select with order by', () => {
+  it('simple select with order by', () => {
+    const sql = 'select id from table1 order by field1'
+    expect(convertSqlToFirebird(sql).toLowerCase()).toEqual(sql.toLowerCase())
+  })
+  it('simple select with order by desc', () => {
+    const sql = 'select id from table1 order by field1 desc'
+    expect(convertSqlToFirebird(sql).toLowerCase()).toEqual(sql.toLowerCase())
+  })
+  it('simple select with order by asc, desc, and default', () => {
+    const sql = 'select id from table1 order by field1 asc, field2 desc, field3'
+    expect(convertSqlToFirebird(sql).toLowerCase()).toEqual(sql.toLowerCase())
+  })
+
+  it('select with where and order by', () => {
+    const sql = 'select id from table1 where id = 1 order by field1'
+    expect(convertSqlToFirebird(sql).toLowerCase()).toEqual(sql.toLowerCase())
+  })
+})

@@ -65,6 +65,7 @@ const expressionListWithSelectExample: ExpressionList = {
           },
         ],
         where: null,
+        orderby: null,
         limit: null,
       },
     },
