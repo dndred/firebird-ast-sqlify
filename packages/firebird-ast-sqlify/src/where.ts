@@ -48,6 +48,7 @@ const ExpressionSchemaRightSide = z.union([expressionSchema, whereSchema, expres
 type BinaryExpressionRightSide = z.infer<typeof ExpressionSchemaRightSide>
 
 export const sqlifyBinaryExpressionSide = (ast: BinaryExpressionLeftSide | BinaryExpressionRightSide): string => {
+  if (!('type' in ast)) return ''
   switch (ast.type) {
     case 'binary_expr':
       return sqlifyWhere(ast)
@@ -75,6 +76,8 @@ export const sqlifyWhere = (ast?: Where): string => {
 }
 
 const getArgumentCountInBinaryExpressionSide = (ast: BinaryExpressionLeftSide | BinaryExpressionRightSide): number => {
+  if (!('type' in ast)) return 0
+
   switch (ast.type) {
     case 'binary_expr':
       return getArgumentsCountInWhere(ast)
